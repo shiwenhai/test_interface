@@ -1,0 +1,3 @@
+demo_template：保存接口入参信息，以接口做区分
+demo_case：测试用例，第一行为各种参数名称
+执行思路：执行时，先读取demo_template获取接口所需参数得到参数字典key_dict，然后读取demo_case,根据key_dict获取所需的参数并组合报文，根据result_key在返回报文中寻找待检查字段，ex_result为预期结果，比对后得出测试结论
