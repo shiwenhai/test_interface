@@ -1,5 +1,6 @@
 # coding=utf-8
 __author__ = 'SongQi'
+import nose
 import xlrd
 import urllib2
 import json
@@ -40,7 +41,7 @@ def read_excel(json_type, interface_type, url):
     col_num = sheet0.ncols
     if rows_num > 1:
         for i in range(1, rows_num):
-            logging.info("="*200)
+            logging.info(u'----------开始构建发送报文----------')
             # Build JSON dict
             tmp_dict = {}
             for j in range(0, col_num):
@@ -70,44 +71,42 @@ def read_excel(json_type, interface_type, url):
                     except KeyError:
                         key_result = "No ex_result,No key_result,please check your case!!!"
             # After building JSON dict,run Json post
+            logging.info(u'----------发送报文构建完成，开始发送报文----------')
             data_json = str(json.dumps(tmp_dict, ensure_ascii=False))
             logging.info(data_json)
             headers = {'Content-Type': 'application/json'}
             request = urllib2.Request(url=url, headers=headers, data=data_json)
             response = urllib2.urlopen(request)
             # Response Analysis
+            logging.info(u'----------接收规则结果，开始规则结果检查----------')
             for j in response:
-                flag_key_result = 0
+                # flag_key_result = 0
                 k = json.loads(j)
                 if interface_type == 'doAccess':
                     res = res_do_access(key_result, k)
                     re_result = res['re_result']
-                    main_rule_result_code = res['main_rule_result_code']
                     flag_key_result = res['flag_key_result']
                 elif interface_type == 'doScore':
-                    print k
                     if k['data'][key_result]:
                         re_result = k['data'][key_result]
                     else:
                         logging.info(key_result.join(' is null'))
                         re_result = 'null'
-                    msg = u"找到待测规则：" + str(key_result) + "。检查ruleResultCode"
+                    msg = u"----------找到待测规则：" + str(key_result) + u"。检查ruleResultCode----------"
                     logging.info(msg)
-                    msg = "re_result: " + str(re_result)
+                    msg = u"返回值: " + str(re_result)
                     logging.info(msg)
+                    flag_key_result = 1
                 else:
                     logging.info('Unknown Interface')
                     break
                 ########
-                if flag_key_result == 1:
-                    pass
-                else:
-                    logging.info(u'没有找到待测规则:"' + str(key_result) + u'"')
+                # if flag_key_result == 1:
+                #     pass
+                # else:
+                #     logging.info(u'----------没有找到待测规则:"' + str(key_result) + u'----------"')
                 if re_result:
                     if re_result.__eq__(ex_result):
-                        logging.info(u"和预期结果一致")
-                        pass
-                    elif main_rule_result_code.__eq__(ex_result):
                         logging.info(u"和预期结果一致")
                         pass
                     else:
@@ -118,50 +117,49 @@ def read_excel(json_type, interface_type, url):
                         logging.info("jason=")
                         logging.info(data_json)
                         logging.info("返回值：")
-                        logging.info(k['data']['data'])
+                        logging.info(re_result)
                         logging.info("预期值：")
                         logging.info(ex_result)
                         logging.info("=" * 100)
                 else:
-                    logging.info(u"无法找到待测字段，请检查用例")
+                    logging.info(u"----------无法找到待测字段，请检查用例----------")
                     logging.info(re_result)
 
 
 def res_do_access(key_result, k):
-    re_result_list = k['data']['data']
-    re_result = 'null'
     flag_key_result = 0
+    re_result_list = k['data']['data']
     for annotations_dict in re_result_list['annotations']:
         main_rule_id = annotations_dict['ruleId']
         main_rule_name = annotations_dict['ruleName']
         main_rule_result_code = annotations_dict['ruleResultCode']
         sub_rules_list = annotations_dict['subRules']  # 通过subRules找到对应的待测返回报文
-        if main_rule_name.__eq__(key_result):
-            logging.info(u"找到待测规则：" + str(main_rule_name) + "。检查ruleResultCode")
-            re_result = main_rule_result_code
-            logging.info("re_result: " + str(re_result))
-            flag_key_result = 1
-        else:
-            for sub_rules_dict in sub_rules_list:
-                rule_name = sub_rules_dict['remark']
-                if rule_name.__eq__(key_result):
-                    logging.info(u"找到待测规则：" + str(sub_rules_dict['remark']) + "。检查ruleResultCode")
-                    logging.info('rule_id = ' + str(sub_rules_dict['ruleId']))
-                    re_result = sub_rules_dict['ruleResultCode']
-                    logging.info("re_result: " + str(re_result))
-                    flag_key_result = 1
-
-    return {'re_result': re_result, 'flag_key_result': flag_key_result, 'main_rule_result_code': main_rule_result_code}
+        for sub_rules_dict in sub_rules_list:
+            rule_name = sub_rules_dict['remark']
+            if rule_name.__eq__(key_result):
+                logging.info(u"----------找到待测规则：" + str(sub_rules_dict['remark']) + u"。检查ruleResultCode----------")
+                logging.info('rule_id = ' + str(sub_rules_dict['ruleId']))
+                re_result = sub_rules_dict['ruleResultCode']
+                logging.info(u"返回值: " + str(re_result))
+                logging.info('*'*30)
+                logging.info('main_ruleId:' + str(main_rule_id))
+                logging.info('main_ruleName:' + str(main_rule_name))
+                logging.info('main_ruleResultCode:' + str(main_rule_result_code))
+                logging.info('*'*30)
+                flag_key_result = 1
+            else:
+                logging.info(u'没找到待测规则')
+                flag_key_result = 0
+                re_result = 'null'
+    return {'re_result': re_result, 'flag_key_result': flag_key_result}
 
 
 def run_rule_test(env, interface_type, *args):
-    # url = "http://rule." + env + ".com/rule-app/ruleapi/" + interface_type
-    url = "http://192.168.3.183:8081/rule-app/ruleapi/" + interface_type
+    url = "http://rule." + env + ".com/rule-app/ruleapi/" + interface_type
     for i in args:
         read_excel(i, interface_type,  url)
 
 
 if __name__ == '__main__':
-    # run_rule_test('sit', 'doAccess',  'MS', 'NSB', 'NSW')
-    # run_rule_test('sit', 'doAccess', 'ML', 'MS', 'NLB', 'NLW', 'NSB', 'NSW', 'FOCUS', 'RLC', 'RSD', 'RSR')
-    run_rule_test('sit', 'doAccess', 'JL', 'JLD', 'JOLT', 'JFOCUSE')
+    run_rule_test('sit', 'doAccess', 'NLB')
+

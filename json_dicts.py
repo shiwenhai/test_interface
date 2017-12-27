@@ -21,6 +21,7 @@ def get_json_dicts(json_type):
                             "hitTongDunRepeateLoanOneMonth",
                             "hitTongDunRepeateLoanThreeMonth",
                             "tongDunRepeateLoanOneWeekendDivOneMonth",
+                           "tongdunFinalScore",
                             "type"]
     json_dicts['ML_Result'] = ['annotations']
     # 大准入闪电借
@@ -39,33 +40,34 @@ def get_json_dicts(json_type):
                         "hitZhongzhichengBlackListCount",
                         "hitZhongzhichengTenantCount",
                         "hitBaiqishiRiskUserDecisionReject",
+                        "tongdunFinalScore",
                         "type"]
     json_dicts['MS_Result'] = ['annotations']
     # 小准入大额蓝领
     json_dicts['NLB'] = [
         "userAge", "zhiMaScore", "zhiMaIvsScore", "hitTongDunRepeateLoanOneWeekend", "hitTongDunRepeateLoanOneMonth",
-        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "tianXingDuration",
+        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "onlineTime",
         "type"
     ]
     json_dicts['NLB_Result'] = ['annotations']
     # 小准入大额白领
     json_dicts['NLW'] = [
         "userAge", "zhiMaScore", "zhiMaIvsScore", "hitTongDunRepeateLoanOneWeekend", "hitTongDunRepeateLoanOneMonth",
-        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "graduateYears", "tianXingDuration",
+        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "graduateYears", "onlineTime",
         "type"
     ]
     json_dicts['NLW_Result'] = ['annotations']
     # 小准入小额白领
     json_dicts['NSW'] = [
         "userAge", "zhiMaScore", "zhiMaIvsScore", "hitTongDunRepeateLoanOneWeekend", "hitTongDunRepeateLoanOneMonth",
-        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "graduateYears", "tianXingDuration",
+        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "graduateYears", "onlineTime",
         "type"
     ]
     json_dicts['NSW_Result'] = ['annotations']
     # 小准入小额蓝领
     json_dicts['NSB'] = [
         "userAge", "zhiMaScore", "zhiMaIvsScore", "hitTongDunRepeateLoanOneWeekend", "hitTongDunRepeateLoanOneMonth",
-        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "graduateYears", "tianXingDuration",
+        "hitTongDunRepeateLoanThreeMonth", "tongdunFinalScore", "mobileMoxieDuration", "graduateYears", "onlineTime",
         "type"
     ]
     json_dicts['NSB_Result'] = ['annotations']
@@ -116,11 +118,33 @@ def get_json_dicts(json_type):
         "userGender", "eduDegree"
     ]
     # BLD0831AJ
-    json_dicts['BLD0831AJ'] = [
+    json_dicts['AJ'] = [
         "type", "isRetainedUser", "maxOverDueDays", "idHitOurBlackList", "mobileHitOurBlackList", "idHitTongDunLoanBlackList", "mobileHitTongDunLoanBlackList",
         "idNameHitTongDunFuzzyLoanBlackList", "idHitTongDunCourtBlackList", "idNameHitTongDunFuzzyCourtBlackList", "idHitTongDunCrimeBlackList", "idHitTongDunCourtExecuteList",
         "idNameHitTongDunFuzzyCourtExecuteList", "idHitTongDunLegalPersonBlackList", "mobileHitTongDunLegalPersonBlackList", "mobileHitTongDunLoanBlackIntermediary",
         "hitZhongzhichengBlackListCount", "hitZhongzhichengTenantCount", "hitBaiqishiRiskUserDecisionReject", "faceSimilarPercent",
         "userAge", "hitTongDunRepeateLoanOneMonth", "zhiMaScore"
     ]
+    # JYD_JL
+    json_dicts['JL'] = [
+        "idHitOurBlackList", "mobileHitOurBlackList", "mobileHitOurBlackContactList", "parentMobileHitOurBlackList", "friend1MobileHitOurBlackList", "idHitTongDunLoanBlackList",
+        "mobileHitTongDunLoanBlackList", "idNameHitTongDunFuzzyLoanBlackList", "idHitTongDunCourtBlackList", "idNameHitTongDunFuzzyCourtBlackList", "idHitTongDunCrimeBlackList",
+        "idHitTongDunCourtExecuteList", "idNameHitTongDunFuzzyCourtExecuteList", "idHitTongDunLegalPersonBlackList", "mobileHitTongDunLegalPersonBlackList", "mobileHitTongDunLoanBlackIntermediary",
+        "hitBaiqishiRiskUserDecisionReject", "hitZhongzhichengBlackListCount", "hitZhongzhichengTenantCount", "permanentAddress", "userAge", "rejectIn30Days", "isRetainedUser", "loanStatusOverdue", "maxOverDueDays",
+        "hitTongDunRepeateLoanOneMonth", "hitTongDunRepeateLoansixMonth", "zhiMaScore", "type"
+
+    ]
+    json_dicts['JLD'] = [
+        "eduDegree", "studyStyle", "faceSimilarPercent", "userContactCount", "userContactHighDangerCount", "userContactHighDangerRate", "lbsCity", "type"
+    ]
+    json_dicts['JFOCUSE'] = [
+        "hitZhiMaFocus", "type"
+    ]
+    json_dicts['JOLT'] = [
+        "onlineTime", "type"
+    ]
+    json_dicts['YRG'] = [
+
+    ]
+
     return json_dicts[json_type]
